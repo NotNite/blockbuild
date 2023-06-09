@@ -1,0 +1,6 @@
+[submodule "libs/raknetify"]
+	path = libs/raknetify
+	url = https://github.com/RelativityMC/raknetify.git
+[submodule "libs/kosmolot-malilib"]
+	path = libs/kosmolot-malilib
+	url = https://github.com/kosmolot-mods/malilib.git

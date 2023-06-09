@@ -1,0 +1,53 @@
+on: [push]
+
+name: blockbuild
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  blockbuild:
+    name: blockbuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout all repositories
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup Gradle cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Run blockbuild
+        run: chmod +x ./blockbuild.sh && ./blockbuild.sh || exit $?
+        env:
+          GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY || '' }}
+          GPG_SECRET_EMAIL: ${{ secrets.GPG_SECRET_EMAIL || '' }}
+          GPG_TEMP_EMAIL: ${{ secrets.GPG_TEMP_EMAIL || '' }}
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./out/
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
