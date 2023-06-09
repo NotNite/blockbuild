@@ -1,2 +1,3 @@
 raknetify fabric
 kosmolot-malilib
+Squake

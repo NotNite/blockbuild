@@ -4,3 +4,6 @@
 [submodule "libs/kosmolot-malilib"]
 	path = libs/kosmolot-malilib
 	url = https://github.com/kosmolot-mods/malilib.git
+[submodule "libs/Squake"]
+	path = libs/Squake
+	url = https://github.com/adryd325/Squake.git

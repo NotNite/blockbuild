@@ -9,6 +9,21 @@ else
   rm -rf ./out/*
 fi
 
+hashes_txt_url=$(cat ./host_config.txt)"hashes.txt"
+hashes_status_code=$(curl -s -o /dev/null -w "%{http_code}" $hashes_txt_url)
+
+commits_txt_url=$(cat ./host_config.txt)"commits.txt"
+commits_status_code=$(curl -s -o /dev/null -w "%{http_code}" $commits_txt_url)
+
+previous_commits=""
+previous_hashes=""
+
+if [ "$hashes_status_code" -eq 200 ] && [ "$commits_status_code" -eq 200 ]; then
+  echo "Fetching previous build info..."
+  previous_hashes=$(curl -s $hashes_txt_url)
+  previous_commits=$(curl -s $commits_txt_url)
+fi
+
 function build() {
   project_name=$1
   project_arg=$2
@@ -20,9 +35,29 @@ function build() {
   build_dir="$project_arg/build/libs"
   out_dir="../../out/$project_name"
 
-  echo "Building $project_name..."
-
   cd ./libs/$project_name
+  current_commit=$(git rev-parse HEAD)
+  if [[ "$previous_commits" == *"$current_commit $project_name"* ]]; then
+    echo "Skipping $project_name as commit hash is unchanged"
+    cd ../..
+
+    # Download all files from previous build so we don't delete them
+    # Kind of wasteful?
+    files=$(echo "$previous_hashes" | grep "./$project_name" | cut -d' ' -f2)
+    for file in $files; do
+      # remove ./
+      file=$(echo $file | cut -c 4-)
+      outpath="./out/$file"
+
+      echo "Downloading $file..."
+      mkdir -p $(dirname $outpath)
+      curl -s $(cat ./host_config.txt)$file -o $outpath
+    done
+
+    return
+  fi
+
+  echo "Building $project_name..."
   if [ -d "$build_dir" ]; then
     echo "Cleaning build artifacts..."
     rm -rf $build_dir
@@ -48,8 +83,23 @@ for (( i=1; i<=$line_count; i++ )); do
   build $line
 done
 
-echo "Generating hashes..."
-find ./out -type f -exec sha256sum {} \; > ./out/hashes.txt
+echo "Generating hash file..."
+# Append to a temporary file and then move it, so it doesn't appear in the hash list itself
+cd ./out
+find . -type f -exec sha256sum {} \; > /tmp/hashes.txt
+mv /tmp/hashes.txt ./hashes.txt
+cd ..
+
+echo "Generating commit file..."
+for dir in ./libs/*; do
+  if [ ! -d "$dir" ]; then
+    continue
+  fi
+
+  cd $dir
+  echo "$(git rev-parse HEAD) $(basename $dir)" >> ../../out/commits.txt
+  cd ../..
+done
 
 if [ ! -z "$GPG_SECRET_KEY" ]; then
   echo "Signing hashes..."
@@ -79,6 +129,13 @@ Expire-Date: 0
 
   gpg --list-keys
 
-  gpg --output ./out/hashes.txt.sig --sign --default-key "$GPG_SECRET_EMAIL" ./out/hashes.txt
-  gpg --output ./out/hashes.txt.sig.tmp --sign --default-key "$GPG_TEMP_EMAIL" ./out/hashes.txt
+  function sign_file() {
+    file=$1
+    echo "Signing $file..."
+    gpg --output $file.sig --sign --default-key "$GPG_SECRET_EMAIL" $file
+    gpg --output $file.sig.tmp --sign --default-key "$GPG_TEMP_EMAIL" $file
+  }
+
+  sign_file ./out/hashes.txt
+  sign_file ./out/commits.txt
 fi

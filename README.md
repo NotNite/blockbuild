@@ -14,7 +14,11 @@ The solution to all of these problems: blockbuild! blockbuild is a simple shell 
   - New to submodules? It's simple: `git submodule add <url>`
 - Create a `build_config.txt`.
   - Each line contains the folder name in `libs`, and the directory the `build` folder is located in (optional; defaults to `.`).
+- Create a `host_config.txt`.
+  - This is the domain of where your build artifacts go, e.g. <https://notnite.github.io/blockbuild/> (with a trailing slash).
 - Push your repository, and enable GitHub Actions and GitHub Pages.
+  - Workflows must have write permissions.
+  - Pages must be deployed through GitHub Actions.
 
 ## Signing
 
