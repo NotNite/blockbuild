@@ -51,6 +51,8 @@ else
   unset IFS
 fi
 
+rm -rf ./out/commits.txt* ./out/hashes.txt* ./out/info.txt* ./out/gpg ./out/out.tar.gz
+
 function build() {
   project_name=$1
   project_arg=$2
@@ -62,6 +64,10 @@ function build() {
   build_dir="$project_arg/build/libs"
   out_dir="../../out/$project_name"
   mvn_dir=$(pwd)/out/mvn
+
+  if [ ! -z "$MSYSTEM" ]; then
+    mvn_dir=$(pwd -W)/out/mvn
+  fi
 
   cd ./mods/$project_name
   current_commit=$(git rev-parse HEAD)
@@ -111,10 +117,6 @@ for (( i=1; i<=$line_count; i++ )); do
   fi
   build $line
 done
-
-if [ -f "./out.tar.gz" ]; then
-  rm ./out.tar.gz
-fi
 
 echo "Generating hash file..."
 # Append to a temporary file and then move it, so it doesn't appear in the hash list itself
