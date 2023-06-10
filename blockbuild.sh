@@ -150,6 +150,7 @@ Expire-Date: 0
   echo "$gpg_config" | gpg --batch --gen-key --armor
 
   echo "Exporting keys..."
+  mkdir -p ./out/gpg
   for key in $(gpg --list-keys --with-colons | grep "^pub" | cut -d: -f5); do
     gpg --armor --export $key > ./out/gpg/$key.asc
   done
