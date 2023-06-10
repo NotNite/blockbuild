@@ -22,6 +22,21 @@ if [ "$hashes_status_code" -eq 200 ] && [ "$commits_status_code" -eq 200 ]; then
   echo "Fetching previous build info..."
   previous_hashes=$(curl -s $hashes_txt_url)
   previous_commits=$(curl -s $commits_txt_url)
+
+  echo "Redownloading old build artifacts..."
+  IFS=$'\n'
+  for hash_line in $previous_hashes; do
+    file=$(echo $hash_line | cut -d' ' -f3)
+    # Remove up to the first slash
+    file=${file#*/}
+
+    outpath="./out/$file"
+
+    echo "Downloading $file..."
+    mkdir -p $(dirname $outpath)
+    curl -s $(cat ./host_config.txt)$file -o $outpath
+  done
+  unset IFS
 fi
 
 function build() {
@@ -40,25 +55,6 @@ function build() {
   if [[ "$previous_commits" == *"$current_commit $project_name"* ]]; then
     echo "Skipping $project_name as commit hash is unchanged"
     cd ../..
-
-    # Download all files from previous build so we don't delete them
-    # Kind of wasteful?
-    for hash_line in $previous_hashes; do
-      if [[ "$hash_line" != *"$project_name"* ]]; then
-        continue
-      fi
-
-      file=$(echo $hash_line | cut -d' ' -f2)
-      # Remove up to the first slash
-      file=${file#*/}
-
-      outpath="./out/$file"
-
-      echo "Downloading $file..."
-      mkdir -p $(dirname $outpath)
-      curl -s $(cat ./host_config.txt)$file -o $outpath
-    done
-
     return
   fi
 
