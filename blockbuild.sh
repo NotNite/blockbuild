@@ -111,7 +111,7 @@ echo "Generating info file..."
 cat << EOF > ./out/info.txt
 Build date: $(date)
 Commit hash: $(git rev-parse HEAD)
-CI log file: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs/$GITHUB_JOB_ID
+CI log file: $GITHUB_JOB_URL
 
 hashes.txt:
 $(cat ./out/hashes.txt)
