@@ -1,12 +1,12 @@
 [submodule "libs/raknetify"]
-	path = libs/raknetify
+	path = mods/raknetify
 	url = https://github.com/RelativityMC/raknetify.git
 [submodule "libs/kosmolot-malilib"]
-	path = libs/kosmolot-malilib
+	path = mods/kosmolot-malilib
 	url = https://github.com/kosmolot-mods/malilib.git
 [submodule "libs/Squake"]
-	path = libs/Squake
+	path = mods/Squake
 	url = https://github.com/adryd325/Squake.git
 [submodule "libs/ceramic"]
-	path = libs/ceramic
+	path = mods/ceramic
 	url = https://github.com/adryd325/ceramic.git

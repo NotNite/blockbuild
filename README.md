@@ -10,15 +10,17 @@ The solution to all of these problems: blockbuild! blockbuild is a simple shell 
 
 - Fork this repository or copy the required files into your own repository.
   - `blockbuild.sh`, `.github/workflows/build.yml`, and `.gitignore`.
-- Add submodules of your desired mods into the `libs` folder.
+- Add submodules of your desired mods into the `mods` folder.
   - New to submodules? It's simple: `git submodule add <url>`
 - Create a `build_config.txt`.
-  - Each line contains the folder name in `libs`, and the directory the `build` folder is located in (optional; defaults to `.`).
+  - Each line contains the folder name in `mods`, and the directory the `build` folder is located in (optional; defaults to `.`).
 - Create a `host_config.txt`.
   - This is the domain of where your build artifacts go, e.g. <https://notnite.github.io/blockbuild/> (with a trailing slash).
 - Push your repository, and enable GitHub Actions and GitHub Pages.
   - Workflows must have write permissions.
   - Pages must be deployed through GitHub Actions.
+
+You can then access `hashes.txt` and `commits.txt` (along with `*.txt.sig` and `*.txt.sig.tmp`), which will provide a listing of all files and commits built by blockbuild.
 
 ## Signing
 
@@ -30,3 +32,21 @@ To use it, set these secrets in the workflow:
   - Generate and export a new secret key with `gpg --full-generate-key`, `gpg --list-secret-keys <name>`, and `gpg --export-secret-keys <id> | base64`. Don't add a passphrase!
 - `GPG_SECRET_EMAIL`: the email associated to the key in `GPG_SECRET_KEY`.
 - `GPG_TEMP_EMAIL`: the email used by the temporary GPG key. Must not conflict with `GPG_SECRET_EMAIL`.
+
+## Packwiz
+
+A `generate-packwiz.js` script is provided for generating `.pw.toml` files automatically:
+
+```shell
+$ node generate-packwiz.js Squake/squake-2.0.0.jar
+name = "squake-2.0.0"
+filename = "squake-2.0.0.jar"
+side = "both"
+
+[download]
+url = "https://notnite.github.io/blockbuild/Squake/squake-2.0.0.jar"
+hash-format = "sha256"
+hash = "0d59872f37b7c0059caf686ea6de5f68621b3fe4fa8160f398de63fff838901d"
+```
+
+You are expected to edit the name and side yourself.

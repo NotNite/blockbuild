@@ -35,7 +35,7 @@ function build() {
   build_dir="$project_arg/build/libs"
   out_dir="../../out/$project_name"
 
-  cd ./libs/$project_name
+  cd ./mods/$project_name
   current_commit=$(git rev-parse HEAD)
   if [[ "$previous_commits" == *"$current_commit $project_name"* ]]; then
     echo "Skipping $project_name as commit hash is unchanged"
@@ -96,7 +96,7 @@ mv /tmp/hashes.txt ./hashes.txt
 cd ..
 
 echo "Generating commit file..."
-for dir in ./libs/*; do
+for dir in ./mods/*; do
   if [ ! -d "$dir" ]; then
     continue
   fi
