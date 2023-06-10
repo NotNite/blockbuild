@@ -16,6 +16,3 @@
 [submodule "mods/baritone"]
 	path = mods/baritone
 	url = https://github.com/wagyourtail/baritone.git
-[submodule "mods/MidnightControls"]
-	path = mods/MidnightControls
-	url = https://github.com/NotNite/MidnightControls.git
