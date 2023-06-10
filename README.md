@@ -33,6 +33,10 @@ To use it, set these secrets in the workflow:
 - `GPG_SECRET_EMAIL`: the email associated to the key in `GPG_SECRET_KEY`.
 - `GPG_TEMP_EMAIL`: the email used by the temporary GPG key. Must not conflict with `GPG_SECRET_EMAIL`.
 
+## Maven
+
+blockbuild automatically generates a Maven repository for the output artifacts under the `mvn` folder. While there is no GUI file listing on GitHub Pages, you can view the list of files with `hashes.txt`.
+
 ## Packwiz
 
 A `generate-packwiz.js` script is provided for generating `.pw.toml` files automatically:
