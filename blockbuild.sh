@@ -118,9 +118,6 @@ $(cat ./out/hashes.txt)
 
 commits.txt:
 $(cat ./out/commits.txt)
-
-GPG keys:
-$(gpg --list-keys)
 EOF
 
 if [ ! -z "$GPG_SECRET_KEY" ]; then
@@ -154,6 +151,9 @@ Expire-Date: 0
   for key in $(gpg --list-keys --with-colons | grep "^pub" | cut -d: -f5); do
     gpg --armor --export $key > ./out/gpg/$key.asc
   done
+
+  echo "\n\nGPG keys:\n" >> ./out/info.txt
+  gpg --list-keys >> ./out/info.txt
 
   for file in ./out/*; do
     if [ ! -f "$file" ]; then
