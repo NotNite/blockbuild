@@ -152,7 +152,7 @@ Expire-Date: 0
     gpg --armor --export $key > ./out/gpg/$key.asc
   done
 
-  echo "\n\nGPG keys:\n" >> ./out/info.txt
+  printf "\nGPG keys:\n" >> ./out/info.txt
   gpg --list-keys >> ./out/info.txt
 
   for file in ./out/*; do
