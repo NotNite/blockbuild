@@ -32,9 +32,23 @@ if [ "$hashes_status_code" -eq 200 ] && [ "$commits_status_code" -eq 200 ]; then
   previous_commits=$(curl -s $commits_txt_url)
 fi
 
+echo "Extracting previous build artifacts..."
 if [ "$out_status_code" -eq 200 ]; then
-  echo "Extracting previous build artifacts..."
   curl -s $out_url | tar -xz -C ./out
+else
+  IFS=$'\n'
+  for hash_line in $previous_hashes; do
+    file=$(echo $hash_line | cut -d' ' -f3)
+    # Remove up to the first slash
+    file=${file#*/}
+
+    outpath="./out/$file"
+
+    echo "Downloading $file..."
+    mkdir -p $(dirname $outpath)
+    curl -s $(cat ./host_config.txt)$file -o $outpath
+  done
+  unset IFS
 fi
 
 function build() {
