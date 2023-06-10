@@ -4,3 +4,5 @@ Squake
 ceramic
 autofish
 baritone fabric
+tweakeroo
+litematica
