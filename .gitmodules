@@ -16,9 +16,3 @@
 [submodule "mods/baritone"]
 	path = mods/baritone
 	url = https://github.com/wagyourtail/baritone.git
-[submodule "mods/tweakeroo"]
-	path = mods/tweakeroo
-	url = https://github.com/kosmolot-mods/tweakeroo.git
-[submodule "mods/litematica"]
-	path = mods/litematica
-	url = https://github.com/kosmolot-mods/litematica.git
