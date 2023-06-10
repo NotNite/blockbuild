@@ -40,6 +40,7 @@ jobs:
           GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY || '' }}
           GPG_SECRET_EMAIL: ${{ secrets.GPG_SECRET_EMAIL || '' }}
           GPG_TEMP_EMAIL: ${{ secrets.GPG_TEMP_EMAIL || '' }}
+          GITHUB_JOB_ID: ${{ github.job }}
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v3

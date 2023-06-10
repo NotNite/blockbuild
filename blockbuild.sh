@@ -106,6 +106,23 @@ for dir in ./mods/*; do
   cd ../..
 done
 
+# cat EOF to ./out/info.txt
+echo "Generating info file..."
+cat << EOF > ./out/info.txt
+Build date: $(date)
+Commit hash: $(git rev-parse HEAD)
+CI log file: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs/$GITHUB_JOB_ID
+
+hashes.txt:
+$(cat ./out/hashes.txt)
+
+commits.txt:
+$(cat ./out/commits.txt)
+
+GPG keys:
+$(gpg --list-keys)
+EOF
+
 if [ ! -z "$GPG_SECRET_KEY" ]; then
   echo "Signing hashes..."
 
@@ -132,15 +149,22 @@ Expire-Date: 0
 %commit"
   echo "$gpg_config" | gpg --batch --gen-key --armor
 
-  gpg --list-keys
+  echo "Exporting keys..."
+  for key in $(gpg --list-keys --with-colons | grep "^pub" | cut -d: -f5); do
+    gpg --armor --export $key > ./out/gpg/$key.asc
+  done
 
-  function sign_file() {
-    file=$1
+  for file in ./out/*; do
+    if [ ! -f "$file" ]; then
+      continue
+    fi
+
+    if [[ "$file" == *".sig" ]]; then
+      continue
+    fi
+
     echo "Signing $file..."
     gpg --output $file.sig --sign --default-key "$GPG_SECRET_EMAIL" $file
-    gpg --output $file.sig.tmp --sign --default-key "$GPG_TEMP_EMAIL" $file
-  }
-
-  sign_file ./out/hashes.txt
-  sign_file ./out/commits.txt
+    gpg --output $file.tmp.sig --sign --default-key "$GPG_TEMP_EMAIL" $file
+  done
 fi
