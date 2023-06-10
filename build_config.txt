@@ -2,3 +2,5 @@ raknetify fabric
 kosmolot-malilib
 Squake
 ceramic
+autofish
+baritone fabric

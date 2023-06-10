@@ -10,3 +10,9 @@
 [submodule "libs/ceramic"]
 	path = mods/ceramic
 	url = https://github.com/adryd325/ceramic.git
+[submodule "mods/autofish"]
+	path = mods/autofish
+	url = https://github.com/Wudji/autofish.git
+[submodule "mods/baritone"]
+	path = mods/baritone
+	url = https://github.com/wagyourtail/baritone.git
