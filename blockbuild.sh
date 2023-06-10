@@ -43,10 +43,15 @@ function build() {
 
     # Download all files from previous build so we don't delete them
     # Kind of wasteful?
-    files=$(echo "$previous_hashes" | grep "./$project_name" | cut -d' ' -f2)
-    for file in $files; do
-      # remove ./
-      file=$(echo $file | cut -c 4-)
+    for hash_line in $previous_hashes; do
+      if [[ "$hash_line" != *"$project_name"* ]]; then
+        continue
+      fi
+
+      file=$(echo $hash_line | cut -d' ' -f2)
+      # Remove up to the first slash
+      file=${file#*/}
+
       outpath="./out/$file"
 
       echo "Downloading $file..."

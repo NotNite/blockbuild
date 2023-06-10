@@ -7,3 +7,6 @@
 [submodule "libs/Squake"]
 	path = libs/Squake
 	url = https://github.com/adryd325/Squake.git
+[submodule "libs/ceramic"]
+	path = libs/ceramic
+	url = https://github.com/adryd325/ceramic.git
