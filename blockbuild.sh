@@ -169,3 +169,5 @@ Expire-Date: 0
     gpg --output $file.tmp.sig --sign --default-key "$GPG_TEMP_EMAIL" $file
   done
 fi
+
+cat ./out/info.txt
