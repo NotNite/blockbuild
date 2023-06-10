@@ -47,7 +47,7 @@ function build() {
 
   build_dir="$project_arg/build/libs"
   out_dir="../../out/$project_name"
-  mvn_dir=$(pwd -W)/out/mvn
+  mvn_dir=$(pwd)/out/mvn
 
   cd ./mods/$project_name
   current_commit=$(git rev-parse HEAD)
