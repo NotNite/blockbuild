@@ -4,4 +4,3 @@ Squake
 ceramic
 autofish
 baritone fabric
-MidnightControls
