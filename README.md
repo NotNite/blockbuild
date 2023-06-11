@@ -20,7 +20,7 @@ The solution to all of these problems: blockbuild! blockbuild is a simple shell 
   - Workflows must have write permissions.
   - Pages must be deployed through GitHub Actions.
 
-You can then access `hashes.txt` and `commits.txt` (along with `*.txt.sig` and `*.txt.sig.tmp`), which will provide a listing of all files and commits built by blockbuild.
+You can then access `hashes.txt` and `commits.txt` (along with `*.txt.sig` and `*.txt.tmp.sig`), which will provide a listing of all files and commits built by blockbuild.
 
 ## Signing
 
