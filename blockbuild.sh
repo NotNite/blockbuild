@@ -26,18 +26,22 @@ out_status_code=$(curl -s -o /dev/null -w "%{http_code}" $out_url)
 previous_commits=""
 previous_hashes=""
 
+set +e
 commit_description=$(git log -1 --pretty=%B)
 build_line=$(echo "$commit_description" | grep "\[blockbuild:build\]")
+force_build_line=$(echo "$commit_description" | grep "\[blockbuild:force\]")
+skip_build_line=$(echo "$commit_description" | grep "\[blockbuild:skip\]")
 
-if [ "$commit_description" == *"[blockbuild:force]"* ]; then
+if [ ! -z "$force_build_line" ]; then
   echo "Commit was set to force all builds."
   export BLOCKBUILD_FORCE_BUILD=1
 fi
 
-if [[ "$commit_description" == *"[blockbuild:skip]"* ]]; then
+if [ ! -z "$skip_build_line" ]; then
   echo "Commit was set to skip all builds."
   exit 0
 fi
+set -e
 
 if [ "$hashes_status_code" -eq 200 ] && [ "$commits_status_code" -eq 200 ]; then
   echo "Fetching previous build info..."
@@ -111,6 +115,17 @@ function build() {
   gradle_properties=$(./gradlew properties -q -p $project_arg)
 
   for file in $build_dir/*.jar; do
+    filename=$(basename $file)
+    if [[ "$filename" == *"-sources.jar" ]]; then
+      continue
+    fi
+
+    sources_file=$(echo $file | sed "s/.jar/-sources.jar/")
+    sources_arg=""
+    if [ -f "$sources_file" ]; then
+      sources_arg="-Dsources=$sources_file"
+    fi
+
     mvn deploy:deploy-file \
     -DgroupId=$(echo "$gradle_properties" | grep "^group:" | cut -d' ' -f2) \
     -DartifactId=$(echo "$gradle_properties" | grep "^archivesBaseName:" | cut -d' ' -f2) \
@@ -118,6 +133,7 @@ function build() {
     -Dpackaging=jar \
     -DrepositoryId=blockbuild \
     -Dfile=$file \
+    $sources_arg \
     -Durl=file://$mvn_dir
   done
 
