@@ -49,13 +49,18 @@ jobs:
           GPG_TEMP_EMAIL: ${{ secrets.GPG_TEMP_EMAIL || '' }}
           GITHUB_JOB_URL: ${{ steps.jobs.outputs.html_url }}
 
+      - name: Generate directory listings
+        uses: jayanta525/github-pages-directory-listing@v3.0.0
+        with:
+          FOLDER: out
+
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v3
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./out/
+          path: out
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v2
