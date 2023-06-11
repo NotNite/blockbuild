@@ -22,6 +22,12 @@ The solution to all of these problems: blockbuild! blockbuild is a simple shell 
 
 You can then access `hashes.txt` and `commits.txt` (along with `*.txt.sig` and `*.txt.tmp.sig`), which will provide a listing of all files and commits built by blockbuild.
 
+When committing to this repository, you can add some directives into your commit message:
+
+- `[blockbuild:skip]` will skip CI for this commit
+- `[blockbuild:build] mod_name` will force that mod to build, even if there are no updates
+- `[blockbuild:force]` will force all mods to build
+
 ## Signing
 
 blockbuild also has an optional rudimentary system to export hash lists and sign that hash list with GPG keys. It both uses a pre-existing key (to show you control the workflow) and generates one on the fly (to verify the artifacts came from the workflow).

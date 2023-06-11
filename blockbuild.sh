@@ -26,6 +26,19 @@ out_status_code=$(curl -s -o /dev/null -w "%{http_code}" $out_url)
 previous_commits=""
 previous_hashes=""
 
+commit_description=$(git log -1 --pretty=%B)
+build_line=$(echo "$commit_description" | grep "\[blockbuild:build\]")
+
+if [ "$commit_description" == *"[blockbuild:force]"* ]; then
+  echo "Commit was set to force all builds."
+  export BLOCKBUILD_FORCE_BUILD=1
+fi
+
+if [[ "$commit_description" == *"[blockbuild:skip]"* ]]; then
+  echo "Commit was set to skip all builds."
+  exit 0
+fi
+
 if [ "$hashes_status_code" -eq 200 ] && [ "$commits_status_code" -eq 200 ]; then
   echo "Fetching previous build info..."
   previous_hashes=$(curl -s $hashes_txt_url)
@@ -72,7 +85,11 @@ function build() {
   cd ./mods/$project_name
   current_commit=$(git rev-parse HEAD)
 
-  if [[ "$previous_commits" == *"$current_commit $project_name"* ]] && [ -z "$BLOCKBUILD_FORCE_BUILD" ]; then
+  set +e
+  in_build_line=$(echo "$build_line" | grep "$project_name")
+  set -e
+
+  if [[ "$previous_commits" == *"$current_commit $project_name"* ]] && [ -z "$BLOCKBUILD_FORCE_BUILD" ] && [ -z "$in_build_line" ]; then
     echo "Skipping $project_name as commit hash is unchanged"
     cd ../..
     return
