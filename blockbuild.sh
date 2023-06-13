@@ -105,6 +105,7 @@ function build() {
     rm -rf $build_dir
   fi
 
+  chmod +x ./gradlew
   ./gradlew build -p $project_arg
 
   echo "Copying build artifacts..."
