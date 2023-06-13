@@ -16,3 +16,6 @@
 [submodule "mods/baritone"]
 	path = mods/baritone
 	url = https://github.com/wagyourtail/baritone.git
+[submodule "mods/Nostalgic-Tweaks"]
+	path = mods/Nostalgic-Tweaks
+	url = https://github.com/Adrenix/Nostalgic-Tweaks.git
