@@ -19,3 +19,6 @@
 [submodule "mods/Nostalgic-Tweaks"]
 	path = mods/Nostalgic-Tweaks
 	url = https://github.com/Adrenix/Nostalgic-Tweaks.git
+[submodule "mods/curium"]
+	path = mods/curium
+	url = https://github.com/katietheqt/curium.git

@@ -5,3 +5,4 @@ ceramic
 autofish
 baritone fabric
 Nostalgic-Tweaks fabric
+curium
