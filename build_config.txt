@@ -6,3 +6,4 @@ autofish
 baritone fabric
 Nostalgic-Tweaks fabric
 curium
+hajlib

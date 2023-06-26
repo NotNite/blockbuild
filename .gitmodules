@@ -22,3 +22,6 @@
 [submodule "mods/curium"]
 	path = mods/curium
 	url = https://github.com/katietheqt/curium.git
+[submodule "mods/hajlib"]
+	path = mods/hajlib
+	url = https://github.com/n2pm/hajlib.git
