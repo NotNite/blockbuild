@@ -114,6 +114,16 @@ function build() {
 
   echo "Deploying to Maven..."
   gradle_properties=$(./gradlew properties -q -p $project_arg)
+  gradle_tasks=$(./gradlew tasks -q -p $project_arg)
+  has_maven_publish=$(echo "$gradle_tasks" | grep "publishToMavenLocal")
+
+  # Use maven-publish when it's available, as our code is JANK
+  if [ ! -z "$has_maven_publish" ]; then
+    echo "Using maven-publish..."
+    ./gradlew publishToMavenLocal -q -p $project_arg
+    cd ../..
+    return
+  fi
 
   for file in $build_dir/*.jar; do
     filename=$(basename $file)
