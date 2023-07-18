@@ -120,7 +120,7 @@ function build() {
   # Use maven-publish when it's available, as our code is JANK
   if [ ! -z "$has_maven_publish" ]; then
     echo "Using maven-publish..."
-    ./gradlew publishToMavenLocal -q -p $project_arg
+    ./gradlew publishToMavenLocal -q -p $project_arg -Dmaven.repo.local=$mvn_dir
     cd ../..
     return
   fi
