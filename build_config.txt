@@ -7,3 +7,4 @@ baritone fabric
 Nostalgic-Tweaks fabric
 curium
 hajlib
+tangerine

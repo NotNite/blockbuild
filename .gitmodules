@@ -25,3 +25,6 @@
 [submodule "mods/hajlib"]
 	path = mods/hajlib
 	url = https://github.com/n2pm/hajlib.git
+[submodule "mods/tangerine"]
+	path = mods/tangerine
+	url = https://github.com/n2pm/tangerine.git
